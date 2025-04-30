@@ -188,13 +188,13 @@ spec:
         {{- end }}
         {{- if .Values.customCommands }}
         - name: minio-custom-command
-          image: "{{ .Values.mcImage.repository }}:{{ .Values.mcImage.tag }}"
+          image: "{{ .Values.customCommandImage.repository }}:{{ .Values.customCommandImage.tag }}"
           {{- if .Values.customCommandJob.securityContext.enabled }}
           {{- with .Values.customCommandJob.containerSecurityContext }}
           securityContext: {{ toYaml . | nindent 12 }}
           {{- end }}
           {{- end }}
-          imagePullPolicy: {{ .Values.mcImage.pullPolicy }}
+          imagePullPolicy: {{ .Values.customCommandImage.pullPolicy }}
           {{- if .Values.customCommandJob.exitCommand }}
           command: [ "/bin/sh", "-c" ]
           args: [ "/bin/sh /config/custom-command; EV=$?; {{ .Values.customCommandJob.exitCommand }} && exit $EV" ]
