@@ -42,6 +42,11 @@ spec:
       securityContext: {{ omit .Values.postJob.securityContext "enabled" | toYaml | nindent 12 }}
       {{- end }}
       volumes:
+        {{- if .Values.extraSecret }}
+        - name: extra-secret
+          secret:
+            secretName: {{ .Values.extraSecret }}
+        {{- end }}
         - name: etc-path
           emptyDir: {}
         - name: tmp
@@ -218,7 +223,7 @@ spec:
               mountPath: {{ .Values.configPathmc }}certs
             {{- end }}
             {{- if .Values.extraSecret }}
-            - name: pypestream-repository-creds
+            - name: extra-secret
               mountPath: "/tmp/minio-config-env"
             {{- end }}
             {{- if .Values.customCommandJob.extraVolumeMounts }}
