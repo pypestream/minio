@@ -217,6 +217,10 @@ spec:
             - name: cert-secret-volume-mc
               mountPath: {{ .Values.configPathmc }}certs
             {{- end }}
+            {{- if .Values.extraSecret }}
+            - name: extra-secret
+              mountPath: "/tmp/minio-config-env"
+            {{- end }}
             {{- if .Values.customCommandJob.extraVolumeMounts }}
               {{- toYaml .Values.customCommandJob.extraVolumeMounts | nindent 12 }}
             {{- end }}
