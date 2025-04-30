@@ -218,7 +218,7 @@ spec:
               mountPath: {{ .Values.configPathmc }}certs
             {{- end }}
             {{- if .Values.extraSecret }}
-            - name: extra-secret
+            - name: pypestream-repository-creds
               mountPath: "/tmp/minio-config-env"
             {{- end }}
             {{- if .Values.customCommandJob.extraVolumeMounts }}
