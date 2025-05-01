@@ -42,11 +42,6 @@ spec:
       securityContext: {{ omit .Values.postJob.securityContext "enabled" | toYaml | nindent 12 }}
       {{- end }}
       volumes:
-        {{- if .Values.extraSecret }}
-        - name: extra-secret
-          secret:
-            secretName: {{ .Values.extraSecret }}
-        {{- end }}
         - name: etc-path
           emptyDir: {}
         - name: tmp
@@ -193,13 +188,13 @@ spec:
         {{- end }}
         {{- if .Values.customCommands }}
         - name: minio-custom-command
-          image: "{{ .Values.customCommandImage.repository }}:{{ .Values.customCommandImage.tag }}"
+          image: "{{ .Values.mcImage.repository }}:{{ .Values.mcImage.tag }}"
           {{- if .Values.customCommandJob.securityContext.enabled }}
           {{- with .Values.customCommandJob.containerSecurityContext }}
           securityContext: {{ toYaml . | nindent 12 }}
           {{- end }}
           {{- end }}
-          imagePullPolicy: {{ .Values.customCommandImage.pullPolicy }}
+          imagePullPolicy: {{ .Values.mcImage.pullPolicy }}
           {{- if .Values.customCommandJob.exitCommand }}
           command: [ "/bin/sh", "-c" ]
           args: [ "/bin/sh /config/custom-command; EV=$?; {{ .Values.customCommandJob.exitCommand }} && exit $EV" ]
@@ -221,10 +216,6 @@ spec:
             {{- if .Values.tls.enabled }}
             - name: cert-secret-volume-mc
               mountPath: {{ .Values.configPathmc }}certs
-            {{- end }}
-            {{- if .Values.extraSecret }}
-            - name: extra-secret
-              mountPath: "/tmp/minio-config-env"
             {{- end }}
             {{- if .Values.customCommandJob.extraVolumeMounts }}
               {{- toYaml .Values.customCommandJob.extraVolumeMounts | nindent 12 }}
@@ -263,5 +254,34 @@ spec:
               mountPath: {{ .Values.configPathmc }}certs
             {{- end }}
           resources: {{- toYaml .Values.makeServiceAccountJob.resources | nindent 12 }}
+        {{- end }}
+        {{- if .Values.bucketImporter }}
+        - name: minio-make-bucket-importer
+          image: "{{ .Values.bucketImporter.repository }}:{{ .Values.bucketImporter.tag }}"
+          imagePullPolicy: {{ .Values.bucketImporter.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Listing /data:" &&
+              ls -la /data &&
+              echo "Done!" 
+          {{- end }}
+          env:
+            - name: MINIO_ENDPOINT
+              value: {{ template "minio.fullname" . }}
+            - name: MINIO_PORT
+              value: {{ .Values.service.port | quote }}
+          volumeMounts:
+            - name: etc-path
+              mountPath: /etc/minio/mc
+            - name: tmp
+              mountPath: /tmp
+            - name: minio-configuration
+              mountPath: /config
+            {{- if .Values.tls.enabled }}
+            - name: cert-secret-volume-mc
+              mountPath: {{ .Values.configPathmc }}certs
+            {{- end }}
         {{- end }}
 {{- end }}

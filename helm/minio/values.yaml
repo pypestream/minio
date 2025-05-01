@@ -28,7 +28,7 @@ mcImage:
   tag: RELEASE.2024-11-21T17-21-54Z
   pullPolicy: IfNotPresent
 
-customCommandImage:
+bucketImporter:
   repository: quay.io/minio/mc
   tag: RELEASE.2024-11-21T17-21-54Z
   pullPolicy: IfNotPresent
