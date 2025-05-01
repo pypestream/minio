@@ -264,12 +264,14 @@ spec:
             - -c
             - |
               echo "Connecting to MinIO.....!"
-              mc 
+              mc alias set myminio ${MINIO_ENDPOINT}:MINIO_PORT console console123
+
+              mc ls myminio 
               echo "Clone Buckets Data......!"
-              git clone https://$(USERNAME):$(TOKEN)@${URL}/argocd-localdev-fork.git /data
+              git clone $(USERNAME):$(TOKEN)@${URL}/argocd-localdev-fork.git /data
               ls -la /data
               echo "Copying Buckets Data......!"
-              mc ls myminio
+              
           env:
             - name: MINIO_ENDPOINT
               value: {{ template "minio.fullname" . }}
