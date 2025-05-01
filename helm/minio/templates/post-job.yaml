@@ -263,14 +263,35 @@ spec:
             - /bin/sh
             - -c
             - |
-              echo "Listing /data:" &&
-              ls -la /data &&
-              echo "Done!" 
+              echo "Connecting to MinIO.....!"
+              mc 
+              echo "Clone Buckets Data......!"
+              git clone https://$(USERNAME):$(TOKEN)@${URL}/argocd-localdev-fork.git /data
+              ls -la /data
+              echo "Copying Buckets Data......!"
+              mc ls myminio
           env:
             - name: MINIO_ENDPOINT
               value: {{ template "minio.fullname" . }}
             - name: MINIO_PORT
               value: {{ .Values.service.port | quote }}
+            {{- if .Values.bucketImporter.secret.name }}
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.bucketImporter.secret.name }}
+                  key: username
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.bucketImporter.secret.name }}
+                  key: password
+              - name: URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.bucketImporter.secret.name }}
+                  key: url
+            {{- end }}
           volumeMounts:
             - name: etc-path
               mountPath: /etc/minio/mc
