@@ -272,7 +272,7 @@ spec:
               cd /data/localdev/infra/minio/minio-data/
               ls -la
               mc ls minio
-              mc cp --recursive bot-bucket minio/app-bot
+              mc cp --recursive bot-bucket/SanityTest minio/app-bot
               
           env:
             - name: MINIO_ENDPOINT
