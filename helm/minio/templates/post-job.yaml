@@ -266,8 +266,23 @@ spec:
               echo "Listing /data:" &&
               ls -la /data &&
               echo "Done!" 
-          {{- end }}
           env:
+            - name: MINIO_ENDPOINT
+              value: {{ template "minio.fullname" . }}
+            - name: MINIO_PORT
+              value: {{ .Values.service.port | quote }}
+          volumeMounts:
+            - name: etc-path
+              mountPath: /etc/minio/mc
+            - name: tmp
+              mountPath: /tmp
+            - name: minio-configuration
+              mountPath: /config
+            {{- if .Values.tls.enabled }}
+            - name: cert-secret-volume-mc
+              mountPath: {{ .Values.configPathmc }}certs
+            {{- end }}
+        {{- end }}
             - name: MINIO_ENDPOINT
               value: {{ template "minio.fullname" . }}
             - name: MINIO_PORT
