@@ -28,11 +28,6 @@ mcImage:
   tag: RELEASE.2024-11-21T17-21-54Z
   pullPolicy: IfNotPresent
 
-customCommandImage:
-  repository: quay.io/minio/mc
-  tag: RELEASE.2024-11-21T17-21-54Z
-  pullPolicy: IfNotPresent
-
 ## minio mode, i.e. standalone or distributed
 mode: distributed ## other supported values are "standalone"
 
