@@ -263,15 +263,17 @@ spec:
             - /bin/sh
             - -c
             - |
-              echo "Connecting to MinIO.....!"
-              mc ls myminio 
-              mc alias set myminio http://${MINIO_ENDPOINT}:${MINIO_PORT} console console123
-              mc ls myminio
+              echo "Connecting to MinIO.....!" 
+              mc alias set minio http://${MINIO_ENDPOINT}:${MINIO_PORT} admin admin123
+              mc ls minio
               
               echo "Clone Buckets Data......!"
               git clone https://$(TOKEN)@${URL}/argocd-localdev-fork.git /data
               ls -la /data
               echo "Copying Buckets Data......!"
+              cd localdev/infra/minio/minio-data/bot-bucket
+              
+
               
           env:
             - name: MINIO_ENDPOINT
