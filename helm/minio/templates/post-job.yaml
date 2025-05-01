@@ -286,7 +286,7 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.bucketImporter.secret.name }}
                   key: password
-              - name: URL
+            - name: URL
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.bucketImporter.secret.name }}
