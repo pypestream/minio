@@ -32,7 +32,8 @@ bucketImporter:
   repository: quay.io/minio/mc
   tag: RELEASE.2024-11-21T17-21-54Z
   pullPolicy: IfNotPresent
-
+  secret:
+    name: pypestream-repository-creds
 ## minio mode, i.e. standalone or distributed
 mode: distributed ## other supported values are "standalone"
 
