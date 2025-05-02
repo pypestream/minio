@@ -266,7 +266,7 @@ spec:
               echo "Connecting to MinIO.....!" 
               mc alias set minio http://${MINIO_ENDPOINT}:${MINIO_PORT} {{ .Values.rootUser }} {{ .Values.rootPassword }}
               echo "Clone Buckets Data......!"
-              git clone https://$(TOKEN)@${URL}/argocd-localdev-fork.git /data
+              git clone https://$(TOKEN)@${URL} /data
               ls -la /data
               echo "Copying Buckets Data......!"
               cd /data/localdev/infra/minio/minio-data/
